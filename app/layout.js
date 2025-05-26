@@ -9,6 +9,14 @@ const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] })
 export const metadata = {
   title: "QuickCart - GreatStack",
   description: "E-Commerce with Next.js ",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  viewport: "width=device-width, initial-scale=1",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "QuickCart"
+  }
 };
 
 export default function RootLayout({ children }) {
