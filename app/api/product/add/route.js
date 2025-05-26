@@ -62,6 +62,27 @@ export async function POST(request) {
 
         const image = result.map(result => result.secure_url)
 
+        // Generate slug from product name
+        const generateSlug = (name) => {
+            return name
+                .toLowerCase()
+                .replace(/[^a-z0-9 -]/g, '') // Remove special characters
+                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+                .trim('-'); // Remove leading/trailing hyphens
+        }
+
+        let slug = generateSlug(name);
+
+        // Ensure slug is unique
+        let slugExists = await Product.findOne({ slug });
+        let counter = 1;
+        while (slugExists) {
+            slug = `${generateSlug(name)}-${counter}`;
+            slugExists = await Product.findOne({ slug });
+            counter++;
+        }
+
         await connectDB()
         const newProduct = await Product.create({
             userId,
@@ -71,7 +92,8 @@ export async function POST(request) {
             price:Number(price),
             offerPrice:Number(offerPrice),
             image,
-            date: Date.now()
+            date: Date.now(),
+            slug
         })
 
         return NextResponse.json({ success: true, message: 'Upload successful', newProduct })

@@ -20,8 +20,23 @@ const Product = () => {
     const [productData, setProductData] = useState(null);
 
     const fetchProductData = async () => {
-        const product = products.find(product => product._id === id);
-        setProductData(product);
+        try {
+            // First try to find by slug in products context
+            let product = products.find(product => product.slug === id);
+
+            if (!product) {
+                // If not found in context, fetch from API
+                const response = await fetch(`/api/product/${id}`);
+                const data = await response.json();
+                if (data.success) {
+                    product = data.product;
+                }
+            }
+
+            setProductData(product);
+        } catch (error) {
+            console.error('Error fetching product:', error);
+        }
     }
 
     useEffect(() => {
