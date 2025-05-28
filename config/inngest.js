@@ -2,7 +2,6 @@ import { Inngest } from "inngest";
 import connectDB from "./db";
 import User from "@/models/User";
 import Order from "@/models/Order";
-import { sendAdminNotification, sendCustomerConfirmation } from "./email";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "quickcart-next" });
@@ -71,7 +70,7 @@ export const createUserOrder = inngest.createFunction(
     },
     {event: 'order/created'},
     async ({events}) => {
-
+        
         const orders = events.map((event)=> {
             return {
                 userId: event.data.userId,
@@ -83,39 +82,7 @@ export const createUserOrder = inngest.createFunction(
         })
 
         await connectDB()
-        const createdOrders = await Order.insertMany(orders)
-
-        // Send emails for each order
-        for (let i = 0; i < createdOrders.length; i++) {
-            const order = createdOrders[i];
-            const eventData = events[i].data;
-
-            try {
-                // Get user details for customer email
-                const user = await User.findById(order.userId);
-
-                const orderData = {
-                    orderId: order._id,
-                    userId: order.userId,
-                    items: eventData.items,
-                    amount: order.amount,
-                    address: eventData.address,
-                    date: order.date
-                };
-
-                // Send admin notification
-                await sendAdminNotification(orderData);
-
-                // Send customer confirmation if user email exists
-                if (user && user.email) {
-                    await sendCustomerConfirmation(orderData, user.email);
-                }
-
-            } catch (emailError) {
-                console.error('Error sending emails for order:', order._id, emailError);
-                // Continue processing other orders even if email fails
-            }
-        }
+        await Order.insertMany(orders)
 
         return { success: true, processed: orders.length };
 
