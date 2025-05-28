@@ -35,11 +35,11 @@ import asus_laptop_image from "./asus_laptop_image.png";
 import projector_image from "./projector_image.png";
 import playstation_image from "./playstation_image.png";
 import buy_abronia_taeniata_image from "./buy_abronia_taeniata_image.png";
-import buy_abronia_graminea_image from "./buy_abronia_graminia_image.png";
-import md_controller_image from "./md_controller_image.png";
+import buy_abronia_graminea_image from "./buy_abronia_graminea_image.png";
+import shipment_partners_image from "./shipment_partners_image";
 import sm_controller_image from "./sm_controller_image.png";
-import jbl_soundbox_image from "./jbl_soundbox_image.png";
-import boy_with_laptop_image from "./boy_with_laptop_image.png";
+import sad_abronia_image from "./sad_abronia_image.png";
+import buy_abronia_mixteca_image from "./buy_abronia_mixteca_image.png";
 import checkmark from "./checkmark.png";
 import product_details_page_apple_earphone_image1 from "./product_details_page_apple_earphone_image1.png";
 import product_details_page_apple_earphone_image2 from "./product_details_page_apple_earphone_image2.png";
@@ -86,10 +86,10 @@ export const assets = {
   playstation_image,
   buy_abronia_graminea_image,
   buy_abronia_taeniata_image,
-  md_controller_image,
+  shipment_partners_image,
   sm_controller_image,
-  jbl_soundbox_image,
-  boy_with_laptop_image,
+  sad_abronia_image,
+  buy_abronia_mixteca_image,
   product_details_page_apple_earphone_image1,
   product_details_page_apple_earphone_image2,
   product_details_page_apple_earphone_image3,

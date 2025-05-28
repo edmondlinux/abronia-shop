@@ -7,19 +7,19 @@ const products = [
     id: 1,
     image: assets.buy_abronia_taeniata_image,
     title: "Buy Abronia Teaniata",
-    description: "Discover the beauty of Abronia taeniata, a stunning and rare arboreal lizard known for its vibrant coloration",
+    description: "Buy Abronia teaniata – Rare, colorful, and tree-dwelling lizard.",
   },
   {
     id: 2,
     image: assets.buy_abronia_graminea_image,
-    title: "Stay Connected",
-    description: "Compact and stylish earphones for every occasion.",
+    title: "Buy Abronia Graminea",
+    description: "We have captive bred abronia graminea for sale, check it out",
   },
   {
     id: 3,
-    image: assets.boy_with_laptop_image,
-    title: "Power in Every Pixel",
-    description: "Shop the latest laptops for work, gaming, and more.",
+    image: assets.buy_abronia_mixteca_image,
+    title: "The stunning Mixteca",
+    description: "Shop the lovely specie of abronia mixteca, and more.",
   },
 ];
 
