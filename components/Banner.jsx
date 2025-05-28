@@ -5,16 +5,16 @@ import Image from "next/image";
 const Banner = () => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between md:pl-20 py-14 md:py-0 bg-[#E6E9F2] my-16 rounded-xl overflow-hidden">
-      
+      <Image
+        className="max-w-56"
+        src={assets.sad_abronia_image}
+        alt="jbl_soundbox_image"
+      />
       <div className="flex flex-col items-center justify-center text-center space-y-2 px-4 md:px-0">
         <h2 className="text-2xl md:text-3xl font-semibold max-w-[290px]">
           Help me, i don`t want to get extinct
         </h2>
-        <Image
-          className="max-w-56"
-          src={assets.sad_abronia_image}
-          alt="jbl_soundbox_image"
-        />
+        
         <p className="max-w-[343px] font-medium text-gray-800/60">
           From immersive feelings, lets save the abronia species. We are the last hope.
         </p>
@@ -30,7 +30,7 @@ const Banner = () => {
       />
       <Image
         className="md:hidden"
-        src={assets.sm_controller_image}
+        src={assets.shipment_partners_image}
         alt="sm_controller_image"
       />
     </div>

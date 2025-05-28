@@ -36,7 +36,7 @@ import projector_image from "./projector_image.png";
 import playstation_image from "./playstation_image.png";
 import buy_abronia_taeniata_image from "./buy_abronia_taeniata_image.png";
 import buy_abronia_graminea_image from "./buy_abronia_graminea_image.png";
-import shipment_partners_image from "./shipment_partners_image";
+import shipment_partners_image from "./shipment_partners_image.png";
 import sm_controller_image from "./sm_controller_image.png";
 import sad_abronia_image from "./sad_abronia_image.png";
 import buy_abronia_mixteca_image from "./buy_abronia_mixteca_image.png";
