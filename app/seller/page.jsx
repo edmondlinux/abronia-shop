@@ -13,7 +13,7 @@ const AddProduct = () => {
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Earphone');
+  const [category, setCategory] = useState('AbroniaGraminea');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
 
@@ -43,14 +43,14 @@ const AddProduct = () => {
         setFiles([]);
         setName('');
         setDescription('');
-        setCategory('Earphone');
+        setCategory('AbroniaGraminea');
         setPrice('');
         setOfferPrice('');
       } else {
         toast.error(data.message);
       }
 
-      
+
     } catch (error) {
       toast.error(error.message)
     }
@@ -127,13 +127,26 @@ const AddProduct = () => {
               onChange={(e) => setCategory(e.target.value)}
               defaultValue={category}
             >
-              <option value="Earphone">Earphone</option>
-              <option value="Headphone">Headphone</option>
-              <option value="Watch">Watch</option>
-              <option value="Smartphone">Smartphone</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Camera">Camera</option>
-              <option value="Accessories">Accessories</option>
+              <option value="AbroniaGraminea">Abronia Graminea</option>
+              <option value="AbroniaLitrochilla">Abronia Lythrochila</option>
+              <option value="AbroniaOaxacae">Abronia Oaxacae</option>
+              <option value="AbroniaTaeniata">Abronia Taeniata</option>
+              <option value="AbroniaAnzuetoi">Abronia Anzuetoi</option>
+              <option value="AbroniaAurita">Abronia Aurita</option>
+              <option value="AbroniaCampbelli">Abronia Campbell</option>
+              <option value="AbroniaChiszari">Abronia Chiszari</option>
+              <option value="AbroniaCuetzpali">Abronia Cuetzpali</option>
+              <option value="AbroniaDeppii">Abronia Deppii</option>
+              <option value="AbroniaFuscolabialis">Abronia Fuscolabialis</option>
+              <option value="AbroniaMatudai">Abronia Matudai</option>
+              <option value="AbroniaMartindelcampo">Abronia Martindelcampo</option>
+              <option value="AbroniaMeledona">Abronia Meledona</option>
+              <option value="AbroniaMixtecd">Abronia Mixteca</option>
+              <option value="AbroniaOchroteaf">Abronia Ochoterenai</option>
+              <option value="AbroniaRamirez">Abronia Ramirezi</option>
+              <option value="AbroniaReynae">Abronia Reynae</option>
+              <option value="AbroniaSmithii">Abronia Smithii</option>
+              <option value="AbroniaVasconcelosi">Abronia Vasconcelosi</option>
             </select>
           </div>
           <div className="flex flex-col gap-1 w-32">
