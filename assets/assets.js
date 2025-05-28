@@ -21,8 +21,8 @@ import star_icon from "./star_icon.svg";
 import redirect_icon from "./redirect_icon.svg";
 import star_dull_icon from "./star_dull_icon.svg";
 import header_abronia_graminea_image from "./header_abronia_graminea_image.png";
-import header_abronia_lythrochila_image from "./header_abronia_lythrochila_image";
-import header_macbook_image from "./header_macbook_image.png";
+import header_abronia_lythrochila_image from "./header_abronia_lythrochila_image.png";
+import header_abronia_oaxacae_image from "./header_abronia_oaxacae_image.png";
 import macbook_image from "./macbook_image.png";
 import bose_headphone_image from "./bose_headphone_image.png";
 import apple_earphone_image from "./apple_earphone_image.png";
@@ -34,8 +34,8 @@ import sony_airbuds_image from "./sony_airbuds_image.png";
 import asus_laptop_image from "./asus_laptop_image.png";
 import projector_image from "./projector_image.png";
 import playstation_image from "./playstation_image.png";
-import girl_with_headphone_image from "./girl_with_headphone_image.png";
-import girl_with_earphone_image from "./girl_with_earphone_image.png";
+import buy_abronia_taeniata_image from "./buy_abronia_taeniata_image.png";
+import buy_abronia_graminea_image from "./buy_abronia_graminia_image.png";
 import md_controller_image from "./md_controller_image.png";
 import sm_controller_image from "./sm_controller_image.png";
 import jbl_soundbox_image from "./jbl_soundbox_image.png";
@@ -72,7 +72,7 @@ export const assets = {
   star_dull_icon,
   header_abronia_graminea_image,
   header_abronia_lythrochila_image,
-  header_macbook_image,
+  header_abronia_oaxacae_image,
   macbook_image,
   bose_headphone_image,
   apple_earphone_image,
@@ -84,8 +84,8 @@ export const assets = {
   asus_laptop_image,
   projector_image,
   playstation_image,
-  girl_with_headphone_image,
-  girl_with_earphone_image,
+  buy_abronia_graminea_image,
+  buy_abronia_taeniata_image,
   md_controller_image,
   sm_controller_image,
   jbl_soundbox_image,

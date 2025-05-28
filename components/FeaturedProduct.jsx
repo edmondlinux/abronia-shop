@@ -5,13 +5,13 @@ import Image from "next/image";
 const products = [
   {
     id: 1,
-    image: assets.girl_with_headphone_image,
-    title: "Unparalleled Sound",
-    description: "Experience crystal-clear audio with premium headphones.",
+    image: assets.buy_abronia_taeniata_image,
+    title: "Buy Abronia Teaniata",
+    description: "Discover the beauty of Abronia taeniata, a stunning and rare arboreal lizard known for its vibrant coloration",
   },
   {
     id: 2,
-    image: assets.girl_with_earphone_image,
+    image: assets.buy_abronia_graminea_image,
     title: "Stay Connected",
     description: "Compact and stylish earphones for every occasion.",
   },
