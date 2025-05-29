@@ -8,7 +8,15 @@ const orderSchema = new mongoose.Schema({
         quantity: { type: Number, required: true }
     }],
     amount: { type: Number, required: true },
-    address: { type: String, ref: 'address', required: true },
+    address: {
+        fullName: { type: String, required: true },
+        phoneNumber: { type: String, required: true },
+        email: { type: String, required: true },
+        pincode: { type: Number, required: true },
+        area: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true }
+    },
     status: { type: String, required: true, default: 'Order Placed' },
     date: { type: Number, required: true },
 })
