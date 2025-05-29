@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
-import connectDB from "./db";
 import User from "@/models/User";
+import { connectDB } from "./db";
 import Order from "@/models/Order";
 
 // Create a client to send and receive events
@@ -70,7 +70,7 @@ export const createUserOrder = inngest.createFunction(
     },
     {event: 'order/created'},
     async ({events}) => {
-        
+
         const orders = events.map((event)=> {
             return {
                 userId: event.data.userId,
@@ -82,7 +82,26 @@ export const createUserOrder = inngest.createFunction(
         })
 
         await connectDB()
-        await Order.insertMany(orders)
+        const createdOrders = await Order.insertMany(orders)
+
+        // Send email confirmations for each order
+        const { sendOrderConfirmationEmail } = await import('../lib/emailService.js')
+
+        for (let i = 0; i < createdOrders.length; i++) {
+            const order = createdOrders[i]
+            const eventData = events[i].data
+
+            try {
+                await sendOrderConfirmationEmail({
+                    address: eventData.address,
+                    items: eventData.items,
+                    amount: eventData.amount,
+                    orderId: order._id
+                })
+            } catch (error) {
+                console.error(`Failed to send email for order ${order._id}:`, error)
+            }
+        }
 
         return { success: true, processed: orders.length };
 
