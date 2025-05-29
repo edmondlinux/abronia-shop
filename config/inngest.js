@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 import User from "@/models/User";
-import { connectDB } from "./db";
+import  connectDB  from "./db";
 import Order from "@/models/Order";
 
 // Create a client to send and receive events

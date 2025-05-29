@@ -1,7 +1,7 @@
 
 import { sendOrderStatusEmail } from '@/lib/emailService';
 import Order from '@/models/Order';
-import { connectDB } from '@/config/db';
+import  connectDB  from '@/config/db';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
