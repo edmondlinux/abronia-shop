@@ -9,19 +9,20 @@ import { NextResponse } from "next/server";
 
 export async function GET(request) {
     try {
-        
+
         const {userId} = getAuth(request)
 
         await connectDB()
 
-        await Address.length
-        await Product.length
-
-        const orders = await Order.find({userId}).populate('address items.product')
+        const orders = await Order.find({userId})
+            .populate('address')
+            .populate('items.product')
+            .exec()
 
         return NextResponse.json({ success:true, orders })
 
     } catch (error) {
+        console.error('Error fetching orders:', error)
         return NextResponse.json({ success:false, message:error.message })
     }
 }
