@@ -142,44 +142,54 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'User not found' });
         }
 
-        // Populate product details for each item
-        const populatedItems = await Promise.all(
+        // Validate products and calculate amount
+        let amount = 0;
+        const validatedItems = await Promise.all(
             items.map(async (item) => {
                 const product = await Product.findById(item.product);
                 if (!product) {
                     throw new Error(`Product with ID ${item.product} not found`);
                 }
+                amount += product.offerPrice * item.quantity;
                 return {
-                    product: {
-                        _id: product._id,
-                        name: product.name,
-                        offerPrice: product.offerPrice
-                    },
+                    product: item.product,
                     quantity: item.quantity
                 };
             })
         );
-
-        // calculate amount using populated items
-        const amount = populatedItems.reduce((acc, item) => {
-            return acc + item.product.offerPrice * item.quantity;
-        }, 0)
 
         const finalAmount = amount + Math.floor(amount * 0.02);
 
         // Prepare order data
         const orderData = {
             userId,
-            items: populatedItems,
+            items: validatedItems,
             amount: finalAmount,
             address,
             date: Date.now()
         };
 
+        // Get product details for email
+        const emailOrderData = {
+            ...orderData,
+            items: await Promise.all(
+                validatedItems.map(async (item) => {
+                    const product = await Product.findById(item.product);
+                    return {
+                        product: {
+                            name: product.name,
+                            offerPrice: product.offerPrice
+                        },
+                        quantity: item.quantity
+                    };
+                })
+            )
+        };
+
         // First, try to send the email before creating the order
         console.log('Attempting to send confirmation email...');
         const emailResult = await sendOrderConfirmationEmail(
-            orderData, 
+            emailOrderData, 
             user.email || address.email, 
             user.name || address.fullName
         );
