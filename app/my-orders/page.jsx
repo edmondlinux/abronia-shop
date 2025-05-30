@@ -66,6 +66,8 @@ const MyOrders = () => {
                                     <p>
                                         <span className="font-medium">{order.address.fullName}</span>
                                         <br />
+                                        <span className="font-medium">{order.address.email}</span>
+                                        <br />
                                         <span >{order.address.area}</span>
                                         <br />
                                         <span>{`${order.address.city}, ${order.address.state}`}</span>
