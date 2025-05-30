@@ -136,10 +136,19 @@ export async function POST(request) {
 
         await connectDB();
 
+        // Import Address model
+        const Address = (await import("@/models/Address")).default;
+
         // Get user details first
         const user = await User.findById(userId);
         if (!user) {
             return NextResponse.json({ success: false, message: 'User not found' });
+        }
+
+        // Get address details
+        const addressDetails = await Address.findById(address);
+        if (!addressDetails) {
+            return NextResponse.json({ success: false, message: 'Address not found' });
         }
 
         // Validate products and calculate amount
@@ -172,6 +181,7 @@ export async function POST(request) {
         // Get product details for email
         const emailOrderData = {
             ...orderData,
+            address: addressDetails, // Use the actual address details
             items: await Promise.all(
                 validatedItems.map(async (item) => {
                     const product = await Product.findById(item.product);
@@ -186,12 +196,16 @@ export async function POST(request) {
             )
         };
 
+        // Determine the best name and email to use
+        const userName = user.name || addressDetails.fullName || 'Customer';
+        const userEmail = user.email || addressDetails.email;
+
         // First, try to send the email before creating the order
         console.log('Attempting to send confirmation email...');
         const emailResult = await sendOrderConfirmationEmail(
             emailOrderData, 
-            user.email || address.email, 
-            user.name || address.fullName
+            userEmail, 
+            userName
         );
 
         if (!emailResult.success) {
