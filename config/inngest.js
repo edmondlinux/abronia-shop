@@ -84,29 +84,6 @@ export const createUserOrder = inngest.createFunction(
         await connectDB()
         const createdOrders = await Order.insertMany(orders)
 
-        // Send email confirmations for each order
-        console.log('📧 Starting email sending process for', createdOrders.length, 'orders')
-        const { sendOrderConfirmationEmail } = await import('../lib/emailService.js')
-
-        for (let i = 0; i < createdOrders.length; i++) {
-            const order = createdOrders[i]
-            const eventData = events[i].data
-
-            console.log(`📧 Attempting to send email for order ${order._id} to ${eventData.address.email}`)
-            
-            try {
-                const emailResult = await sendOrderConfirmationEmail({
-                    address: eventData.address,
-                    items: eventData.items,
-                    amount: eventData.amount,
-                    orderId: order._id
-                })
-                console.log(`✅ Email sent successfully for order ${order._id}:`, emailResult)
-            } catch (error) {
-                console.error(`❌ Failed to send email for order ${order._id}:`, error)
-            }
-        }
-
         return { success: true, processed: orders.length };
 
     }

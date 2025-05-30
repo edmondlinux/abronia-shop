@@ -4,7 +4,6 @@ import Order from "@/models/Order";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import connectDB from "@/config/db";
-import { sendOrderConfirmationEmail } from "@/lib/emailService";
 
 export async function POST(request) {
     try {
@@ -49,26 +48,7 @@ export async function POST(request) {
         };
 
         const createdOrder = await Order.create(orderData);
-        console.log('📧 Order created successfully:', createdOrder._id);
-
-        // Send email confirmation directly
-        console.log('📧 Starting email sending process for order:', createdOrder._id);
-        
-        const emailData = {
-            address,
-            items: populatedItems,
-            amount: finalAmount,
-            orderId: createdOrder._id
-        };
-
-        const emailResult = await sendOrderConfirmationEmail(emailData);
-        
-        if (emailResult.success) {
-            console.log('✅ Email sent successfully:', emailResult.messageId);
-        } else {
-            console.error('❌ Email sending failed:', emailResult.error);
-            // Don't fail the order creation if email fails
-        }
+        console.log('Order created successfully:', createdOrder._id);
 
         // clear user cart
         const user = await User.findById(userId)
@@ -78,12 +58,11 @@ export async function POST(request) {
         return NextResponse.json({ 
             success: true, 
             message: 'Order Placed',
-            orderId: createdOrder._id,
-            emailSent: emailResult.success
+            orderId: createdOrder._id
         })
 
     } catch (error) {
-        console.log('❌ Order creation error:', error)
+        console.log('Order creation error:', error)
         return NextResponse.json({ success: false, message: error.message })
     }
 }
