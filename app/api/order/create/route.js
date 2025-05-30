@@ -4,6 +4,126 @@ import Order from "@/models/Order";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import connectDB from "@/config/db";
+import nodemailer from "nodemailer";
+
+// Email configuration
+const createEmailTransporter = () => {
+  return nodemailer.createTransporter({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+};
+
+// Function to generate order confirmation email HTML
+const generateOrderEmailHTML = (order, userDetails) => {
+  const itemsHTML = order.items.map(item => `
+    <tr>
+      <td style="padding: 10px; border-bottom: 1px solid #eee;">
+        <strong>${item.product.name}</strong><br>
+        <small>Quantity: ${item.quantity}</small>
+      </td>
+      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">
+        $${(item.product.offerPrice * item.quantity).toFixed(2)}
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Order Confirmation</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #2c3e50; text-align: center;">Order Confirmation</h1>
+
+        <p>Dear ${userDetails.name},</p>
+
+        <p>Thank you for your order! We're excited to confirm that we've received your order and it's being processed.</p>
+
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+          <h2 style="margin-top: 0; color: #2c3e50;">Order Details</h2>
+          <p><strong>Order Date:</strong> ${new Date(order.date).toLocaleDateString()}</p>
+          <p><strong>Total Amount:</strong> $${order.amount.toFixed(2)}</p>
+        </div>
+
+        <h3 style="color: #2c3e50;">Items Ordered:</h3>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <thead>
+            <tr style="background-color: #f8f9fa;">
+              <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Item</th>
+              <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHTML}
+          </tbody>
+          <tfoot>
+            <tr style="background-color: #f8f9fa; font-weight: bold;">
+              <td style="padding: 10px; border-top: 2px solid #dee2e6;">Total</td>
+              <td style="padding: 10px; border-top: 2px solid #dee2e6; text-align: right;">$${order.amount.toFixed(2)}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #2c3e50;">Shipping Address</h3>
+          <p>
+            ${order.address.fullName}<br>
+            ${order.address.area}<br>
+            ${order.address.city}, ${order.address.state}<br>
+            Phone: ${order.address.phoneNumber}
+          </p>
+        </div>
+
+        <p>We'll send you another email with tracking information once your order ships.</p>
+
+        <p>If you have any questions about your order, please don't hesitate to contact us.</p>
+
+        <p>Thank you for choosing QuickCart!</p>
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+          <p style="color: #6c757d; font-size: 14px;">
+            This is an automated email. Please do not reply to this email.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+// Function to send order confirmation email
+const sendOrderConfirmationEmail = async (order, userEmail, userName) => {
+  try {
+    const transporter = createEmailTransporter();
+
+    const mailOptions = {
+      from: {
+        name: 'QuickCart',
+        address: process.env.GMAIL_USER
+      },
+      to: userEmail,
+      subject: 'Order Confirmation - Thank you for your purchase!',
+      html: generateOrderEmailHTML(order, { name: userName, email: userEmail }),
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+    console.log('Order confirmation email sent successfully:', result.messageId);
+    return { success: true, messageId: result.messageId };
+  } catch (error) {
+    console.error('Error sending order confirmation email:', error);
+    return { success: false, error: error.message };
+  }
+};
 
 export async function POST(request) {
     try {
@@ -16,10 +136,19 @@ export async function POST(request) {
 
         await connectDB();
 
+        // Get user details first
+        const user = await User.findById(userId);
+        if (!user) {
+            return NextResponse.json({ success: false, message: 'User not found' });
+        }
+
         // Populate product details for each item
         const populatedItems = await Promise.all(
             items.map(async (item) => {
                 const product = await Product.findById(item.product);
+                if (!product) {
+                    throw new Error(`Product with ID ${item.product} not found`);
+                }
                 return {
                     product: {
                         _id: product._id,
@@ -38,7 +167,7 @@ export async function POST(request) {
 
         const finalAmount = amount + Math.floor(amount * 0.02);
 
-        // Create order directly in database
+        // Prepare order data
         const orderData = {
             userId,
             items: populatedItems,
@@ -47,22 +176,42 @@ export async function POST(request) {
             date: Date.now()
         };
 
+        // First, try to send the email before creating the order
+        console.log('Attempting to send confirmation email...');
+        const emailResult = await sendOrderConfirmationEmail(
+            orderData, 
+            user.email || address.email, 
+            user.name || address.fullName
+        );
+
+        if (!emailResult.success) {
+            console.error('Email sending failed:', emailResult.error);
+            return NextResponse.json({ 
+                success: false, 
+                message: `Order creation failed: Unable to send confirmation email. ${emailResult.error}` 
+            });
+        }
+
+        // Only create order if email was sent successfully
         const createdOrder = await Order.create(orderData);
         console.log('Order created successfully:', createdOrder._id);
 
-        // clear user cart
-        const user = await User.findById(userId)
+        // Clear user cart only after successful order creation
         user.cartItems = {}
         await user.save()
 
         return NextResponse.json({ 
             success: true, 
-            message: 'Order Placed',
-            orderId: createdOrder._id
+            message: 'Order Placed and confirmation email sent',
+            orderId: createdOrder._id,
+            emailSent: true
         })
 
     } catch (error) {
-        console.log('Order creation error:', error)
-        return NextResponse.json({ success: false, message: error.message })
+        console.error('Order creation error:', error)
+        return NextResponse.json({ 
+            success: false, 
+            message: `Order creation failed: ${error.message}` 
+        })
     }
 }
