@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { getUserCurrency } from '@/utils/currencyUtils'; // adjust path as needed
 
 export const AppContext = createContext();
 
@@ -13,7 +14,7 @@ export const useAppContext = () => {
 
 export const AppContextProvider = (props) => {
 
-    const currency = process.env.NEXT_PUBLIC_CURRENCY
+    const [currency, setCurrency] = useState('$'); // default to USD symbol
     const router = useRouter()
 
     const { user } = useUser()
@@ -151,6 +152,14 @@ export const AppContextProvider = (props) => {
         addToCart, updateCartQuantity,
         getCartCount, getCartAmount
     }
+
+    useEffect(() => {
+        const fetchCurrency = async () => {
+            const userCurrency = await getUserCurrency();
+            setCurrency(userCurrency.symbol); // or setCurrency(userCurrency) if you want full object
+        };
+        fetchCurrency();
+    }, []);
 
     return (
         <AppContext.Provider value={value}>

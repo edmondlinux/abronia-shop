@@ -14,7 +14,7 @@ const Product = () => {
 
     const { id } = useParams();
 
-    const { products, router, addToCart, user } = useAppContext()
+    const { currency, products, router, addToCart, user } = useAppContext()
 
     const [mainImage, setMainImage] = useState(null);
     const [productData, setProductData] = useState(null);
@@ -100,9 +100,9 @@ const Product = () => {
                         {productData.description}
                     </p>
                     <p className="text-3xl font-medium mt-6">
-                        ${productData.offerPrice}
+                        {currency}{productData.offerPrice}
                         <span className="text-base font-normal text-gray-800/60 line-through ml-2">
-                            ${productData.price}
+                            {currency}{productData.price}
                         </span>
                     </p>
                     <hr className="bg-gray-600 my-6" />
