@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 const BlogList = () => {
     const { router } = useAppContext();
@@ -86,6 +87,8 @@ const BlogList = () => {
 
     if (loading) {
         return (
+      
+           
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-xl">Loading blog posts...</div>
             </div>
@@ -93,6 +96,8 @@ const BlogList = () => {
     }
 
     return (
+        <>
+         <Navbar />
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
@@ -258,6 +263,7 @@ const BlogList = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 

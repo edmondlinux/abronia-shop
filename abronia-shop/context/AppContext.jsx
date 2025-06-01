@@ -66,11 +66,17 @@ export const AppContextProvider = (props) => {
 
     const addToCart = async (itemId) => {
 
+
         if (!user) {
-            return toast('Please login',{
+            toast('Please login first', {
                 icon: '⚠️',
-              })
+            });
+            setTimeout(() => {
+                router.push('/sign-in');
+            }, 2000);
+            return;
         }
+
 
         let cartData = structuredClone(cartItems);
         if (cartData[itemId]) {

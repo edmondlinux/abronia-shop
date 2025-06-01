@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 const BlogPost = () => {
     const params = useParams();
@@ -73,6 +74,8 @@ const BlogPost = () => {
     }
 
     return (
+        <> 
+        <Navbar/> 
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
             <div className="bg-white shadow-sm">
@@ -189,6 +192,7 @@ const BlogPost = () => {
                 </div>
             </article>
         </div>
+        </>
     );
 };
 
