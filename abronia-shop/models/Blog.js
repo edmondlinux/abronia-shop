@@ -72,8 +72,7 @@ const BlogSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Index for better search performance
-BlogSchema.index({ slug: 1 });
+// Index for better search performance  
 BlogSchema.index({ category: 1 });
 BlogSchema.index({ tags: 1 });
 BlogSchema.index({ reptileSpecies: 1 });
