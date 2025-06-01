@@ -155,10 +155,8 @@ const BlogPost = () => {
                         <div className="prose prose-lg max-w-none">
                             <div
                                 className="text-gray-800 leading-relaxed"
-                                style={{ whiteSpace: 'pre-wrap' }}
-                            >
-                                {blogPost.content}
-                            </div>
+                                dangerouslySetInnerHTML={{ __html: blogPost.content }}
+                            />
                         </div>
 
                         {/* Tags */}

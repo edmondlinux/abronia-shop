@@ -209,12 +209,13 @@ const BlogManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Content</label>
+                                    <label className="block text-sm font-medium mb-1">Content (HTML)</label>
                                     <textarea
                                         value={content}
                                         onChange={(e) => setContent(e.target.value)}
                                         rows="8"
                                         className="w-full outline-none py-2 px-3 rounded border border-gray-300"
+                                        placeholder="Enter HTML content, e.g., <p>Taking care of abronia has never been easy</p>"
                                         required
                                     />
                                 </div>
