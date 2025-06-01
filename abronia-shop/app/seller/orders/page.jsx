@@ -43,12 +43,32 @@ const Orders = () => {
         }
     }, [user]);
 
+    // Helper function to safely render order items
+    const renderOrderItems = (items) => {
+        if (!items || !Array.isArray(items)) {
+            return "No items";
+        }
+
+        return items
+            .filter(item => item && item.product && item.product.name) // Filter out invalid items
+            .map((item) => `${item.product.name} x ${item.quantity || 1}`)
+            .join(", ");
+    };
+
+    // Helper function to safely get items count
+    const getItemsCount = (items) => {
+        if (!items || !Array.isArray(items)) {
+            return 0;
+        }
+        return items.length;
+    };
+
     return (
         <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
             {loading ? <Loading /> : <div className="md:p-10 p-4 space-y-5">
                 <h2 className="text-lg font-medium">Orders</h2>
                 <div className="max-w-4xl rounded-md">
-                    {orders.map((order, index) => (
+                    {orders && orders.length > 0 ? orders.map((order, index) => (
                         <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-gray-300">
                             <div className="flex-1 flex gap-5 max-w-80">
                                 <Image
@@ -58,32 +78,36 @@ const Orders = () => {
                                 />
                                 <p className="flex flex-col gap-3">
                                     <span className="font-medium">
-                                        {order.items.map((item) => item.product.name + ` x ${item.quantity}`).join(", ")}
+                                        {renderOrderItems(order.items)}
                                     </span>
-                                    <span>Items : {order.items.length}</span>
+                                    <span>Items : {getItemsCount(order.items)}</span>
                                 </p>
                             </div>
                             <div>
                                 <p>
-                                    <span className="font-medium">{order.address.fullName}</span>
+                                    <span className="font-medium">{order.address?.fullName || 'N/A'}</span>
                                     <br />
-                                    <span >{order.address.area}</span>
+                                    <span>{order.address?.area || 'N/A'}</span>
                                     <br />
-                                    <span>{`${order.address.city}, ${order.address.state}`}</span>
+                                    <span>{order.address ? `${order.address.city || ''}, ${order.address.state || ''}` : 'N/A'}</span>
                                     <br />
-                                    <span>{order.address.phoneNumber}</span>
+                                    <span>{order.address?.phoneNumber || 'N/A'}</span>
                                 </p>
                             </div>
-                            <p className="font-medium my-auto">{currency}{order.amount}</p>
+                            <p className="font-medium my-auto">{currency}{order.amount || 0}</p>
                             <div>
                                 <p className="flex flex-col">
                                     <span>Method : COD</span>
-                                    <span>Date : {new Date(order.date).toLocaleDateString()}</span>
+                                    <span>Date : {order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</span>
                                     <span>Payment : Pending</span>
                                 </p>
                             </div>
                         </div>
-                    ))}
+                    )) : (
+                        <div className="p-5 text-center text-gray-500">
+                            No orders found
+                        </div>
+                    )}
                 </div>
             </div>}
             <Footer />
